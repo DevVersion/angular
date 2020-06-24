@@ -38,7 +38,7 @@ v9 - v12
 | `@angular/bazel`              | [`Bazel builder and schematics`](#bazelbuilder)                               | v10 |
 | `@angular/common`             | [`ReflectiveInjector`](#reflectiveinjector)                                   | <!--v8--> v11 |
 | `@angular/common`             | [`CurrencyPipe` - `DEFAULT_CURRENCY_CODE`](api/common/CurrencyPipe#currency-code-deprecation) | <!--v9--> v11 |
-| `@angular/common/testing`     | [`TestRequest` accepting `ErrorEvent`](#testrequest-errorevent)               | <!--v10--> v12 |
+| `@angular/common/http/testing`| [`TestRequest` accepting `ErrorEvent`](#testrequest-errorevent)               | <!--v10--> v12 |
 | `@angular/core`               | [`CollectionChangeRecord`](#core)                                             | <!--v7--> v11 |
 | `@angular/core`               | [`DefaultIterableDiffer`](#core)                                              | <!--v7--> v11 |
 | `@angular/core`               | [`ReflectiveKey`](#core)                                                      | <!--v8--> v11 |
@@ -494,17 +494,16 @@ If you rely on the behavior that the same object instance should cause change de
 {@a testrequest-errorevent}
 ### `TestRequest` accepting `ErrorEvent`
 
-The `@angular/common` package provides utilities for testing the `HttpClient`. One part of these
-testing utilities is the `TestRequest` class. It serves as mock for HTTP requests and is primarily
-used in the `HttpTestingController`.
+Angular provides utilities for testing `HttpClient`. The `TestRequest` class from
+`@angular/common/http/testing` mocks HTTP request objects for use with `HttpTestingController`.
 
-`TestRequest` provides an interface for resolving to mocked content, or simulating an errored http
-request. Currently, the method for simulating an error accepts objects of type `ErrorEvent`. This
-does not match with error events that are returned by browsers natively, so we intend to no longer
-accept `ErrorEvent`.
+`TestRequest` provides an API for simulating an HTTP response with an error. In earlier versions
+of Angular, this API accepted objects of type `ErrorEvent`, which does not match the type of
+error event being returned by browsers natively. If you use `ErrorEvent` with `TestRequest`,
+you should switch to `ProgressEvent`. A future version of Angular will remove support for
+using `ErrorEvent` with `TestRequest`.
 
-If you use `ErrorEvent` in your project's tests, consider switching to `ProgressEvent` with the
-error type. Here is an example:
+Here is an example using a `ProgressEvent`:
 
 ```ts
 const mockError = new ProgressEvent('error');
